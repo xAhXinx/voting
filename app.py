@@ -33,20 +33,28 @@ def submit_vote(user_id, choice):
         new_row = pd.DataFrame([{'user_id': user_id, 'choice': choice}])
         votes_df = pd.concat([votes_df, new_row], ignore_index=True)
     votes_df.to_csv(VOTES_FILE_PATH, index=False)
+
+# 插入用户
+def add_user(user_id):
+    users_df = load_users()
+    if user_id not in users_df['user_id'].values:
+        new_row = pd.DataFrame([{'user_id': user_id}])
+        users_df = pd.concat([users_df, new_row], ignore_index=True)
+        users_df.to_csv(USERS_FILE_PATH, index=False)
         
 # 前端页面
 st.title("📊 实时可改票投票系统")
 
-user_id = st.text_input("请输入你的电话号码", max_chars=30)
+user_id = st.text_input("请输入你的电子邮箱", max_chars=30)
 choice = st.radio("你选择支持哪一项？", ["正", "反"])
 
 if st.button("提交/修改投票"):
     if user_id.strip() == "":
-        st.warning("请输入一个有效的电话号码")
+        st.warning("请输入一个有效的电子邮箱")
     else:
         users_df = load_users()
         if user_id in users_df['user_id'].values:
-            submit_vote(user_id.strip(), choice)
+            submit_vote(user_id, choice)
             st.success("✅ 投票成功，你可以随时更改")
         else:
             st.warning("请先提交Google Form")
