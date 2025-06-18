@@ -1,6 +1,11 @@
 import streamlit as st
+import matplotlib
+from matplotlib import pyplot as plt
 import pandas as pd
 import os
+
+matplotlib.rcParams['font.family'] = 'Microsoft YaHei'  # 或 SimHei, STSong, Noto Sans CJK
+matplotlib.rcParams['axes.unicode_minus'] = False  # 解决负号 '-' 显示为方块
 
 VOTES_FILE_PATH = "votes.csv"
 USERS_FILE_PATH = "users.csv"
@@ -66,7 +71,29 @@ if votes_df.empty:
     st.info("暂无投票")
 else:
     vote_counts = votes_df['choice'].value_counts()
-    st.bar_chart(vote_counts)
+    fig, ax = plt.subplots()
+    ax.pie(vote_counts, labels=vote_counts.index, autopct='%1.1f%%', startangle=90)
+    ax.axis('equal')
+    st.pyplot(fig)
 
 # 自动刷新按钮（可选）
 st.button("🔄 手动刷新图表")
+
+st.subheader("👤 新用户注册")
+admin_password = st.text_input("请输入管理员密码", type="password", key="admin_pwd")
+ADMIN_PASSWORD = "password@abc123"  # 请替换为你的管理员密码
+
+if admin_password == ADMIN_PASSWORD:
+    new_user_id = st.text_input("请输入新用户电子邮箱进行注册", key="register")
+    if st.button("注册新用户"):
+        if new_user_id.strip() == "":
+            st.warning("请输入一个有效的电子邮箱进行注册")
+        else:
+            users_df = load_users()
+            if new_user_id in users_df['user_id'].values:
+                st.info("该用户已注册")
+            else:
+                add_user(new_user_id)
+                st.success("注册成功！请返回上方进行投票")
+else:
+    st.info("请输入管理员密码以注册新用户")
