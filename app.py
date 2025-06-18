@@ -31,10 +31,9 @@ def submit_vote(user_id, choice):
         votes_df.loc[votes_df['user_id'] == user_id, 'choice'] = choice
     else:
         new_row = pd.DataFrame([{'user_id': user_id, 'choice': choice}])
-        df = pd.concat([df, new_row], ignore_index=True)
+        votes_df = pd.concat([votes_df, new_row], ignore_index=True)
     votes_df.to_csv(VOTES_FILE_PATH, index=False)
         
-
 # 前端页面
 st.title("📊 实时可改票投票系统")
 
