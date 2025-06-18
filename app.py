@@ -4,9 +4,6 @@ from matplotlib import pyplot as plt
 import pandas as pd
 import os
 
-matplotlib.rcParams['font.family'] = 'Microsoft YaHei'  # 或 SimHei, STSong, Noto Sans CJK
-matplotlib.rcParams['axes.unicode_minus'] = False  # 解决负号 '-' 显示为方块
-
 VOTES_FILE_PATH = "votes.csv"
 USERS_FILE_PATH = "users.csv"
 
@@ -72,7 +69,7 @@ if votes_df.empty:
 else:
     vote_counts = votes_df['choice'].value_counts()
     fig, ax = plt.subplots()
-    ax.pie(vote_counts, labels=vote_counts.index, autopct='%1.1f%%', startangle=90)
+    ax.pie(vote_counts, labels=vote_counts.index, autopct='%1.1f%%', startangle=90, textprops={'fontname': 'DejaVu Sans'})
     ax.axis('equal')
     st.pyplot(fig)
 
