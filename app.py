@@ -26,16 +26,14 @@ def load_users():
 # 更新或插入投票
 def submit_vote(user_id, choice):
     votes_df = load_votes()
-    users_df = load_users()
-    if user_id in users_df['user_id'].values:
-        if user_id in votes_df['user_id'].values:
-            votes_df.loc[votes_df['user_id'] == user_id, 'choice'] = choice
-        else:
-            new_row = pd.DataFrame([{'user_id': user_id, 'choice': choice}])
-            df = pd.concat([df, new_row], ignore_index=True)
-        votes_df.to_csv(VOTES_FILE_PATH, index=False)
+
+    if user_id in votes_df['user_id'].values:
+        votes_df.loc[votes_df['user_id'] == user_id, 'choice'] = choice
     else:
-        st.warning("请先提交Google Form")
+        new_row = pd.DataFrame([{'user_id': user_id, 'choice': choice}])
+        df = pd.concat([df, new_row], ignore_index=True)
+    votes_df.to_csv(VOTES_FILE_PATH, index=False)
+        
 
 # 前端页面
 st.title("📊 实时可改票投票系统")
@@ -47,8 +45,12 @@ if st.button("提交/修改投票"):
     if user_id.strip() == "":
         st.warning("请输入一个有效的电话号码")
     else:
-        submit_vote(user_id.strip(), choice)
-        st.success("✅ 投票成功，你可以随时更改")
+        users_df = load_users()
+        if user_id in users_df['user_id'].values:
+            submit_vote(user_id.strip(), choice)
+            st.success("✅ 投票成功，你可以随时更改")
+        else:
+            st.warning("请先提交Google Form")
 
 # 显示统计图
 votes_df = load_votes()
