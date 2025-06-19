@@ -104,7 +104,7 @@ if st.button("提交/修改投票", use_container_width=True):
             submit_vote(user_id, choice)
             st.success("✅ 投票成功，你可以随时更改")
         else:
-            st.warning("请先提交Google Form")
+            st.warning("请先提交Google Form进行注册")
 
 st.markdown("<hr style='border: 2px solid black;'>", unsafe_allow_html=True)
 
