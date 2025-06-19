@@ -3,9 +3,8 @@ import matplotlib
 from matplotlib import pyplot as plt
 import pandas as pd
 import os
-
-plt.rcParams['font.family'] = 'SimHei'  # 或 'Microsoft YaHei'
-plt.rcParams['axes.unicode_minus'] = False  # 避免负号显示为方块
+import matplotlib.font_manager as fm
+my_font = fm.FontProperties(fname="NotoSansTC-VariableFont_wght.ttf")
 
 VOTES_FILE_PATH = "votes.csv"
 USERS_FILE_PATH = "users.csv"
@@ -75,6 +74,11 @@ else:
         wedgeprops={'edgecolor': 'black', 'linewidth': 2},  # 黑色边框
         textprops={'color': 'black'}
     )
+
+    # 手动设置标签字体
+    for text in texts + autotexts:
+        text.set_fontproperties(my_font)
+
     ax.axis('equal')
 
     # 显示图
