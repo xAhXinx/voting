@@ -92,7 +92,7 @@ st.markdown("<hr style='border: 2px solid black;'>", unsafe_allow_html=True)
 # 前端页面
 st.subheader("📊 实时可改票投票系统")
 
-user_id = st.text_input("请输入你的电子邮箱：", max_chars=30)
+user_id = st.text_input("请输入你的电子邮箱：", max_chars=99)
 choice = st.radio("你选择支持哪一方？", ["正", "反"], horizontal=True)
 
 if st.button("提交/修改投票", use_container_width=True):
