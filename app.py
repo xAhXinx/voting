@@ -4,6 +4,8 @@ from matplotlib import pyplot as plt
 import pandas as pd
 import os
 import matplotlib.font_manager as fm
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 my_font = fm.FontProperties(fname="NotoSansTC-VariableFont_wght.ttf")
 
 VOTES_FILE_PATH = "votes.csv"
@@ -20,16 +22,29 @@ if not os.path.exists(USERS_FILE_PATH):
         f.write("user_id\n")
 
 # 读取CSV为DataFrame
-def load_votes():
+def load_votes_df():
     return pd.read_csv(VOTES_FILE_PATH)
 
 # 读取CSV为DataFrame
 def load_users():
-    return pd.read_csv(USERS_FILE_PATH)
+    # Define scope
+    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+
+    # Authenticate
+    creds = ServiceAccountCredentials.from_json_keyfile_name("voting-464016-35d60f0bca00.json", scope)
+    client = gspread.authorize(creds)
+
+    spreadsheet = client.open("voting")
+    sheet = spreadsheet.worksheet("Form Responses 1")
+    data = sheet.get_all_records()
+
+    # Extract only the email addresses
+    users = [row['Email Address'] for row in data]
+    return users
 
 # 更新或插入投票
 def submit_vote(user_id, choice):
-    votes_df = load_votes()
+    votes_df = load_votes_df()
 
     if user_id in votes_df['user_id'].values:
         votes_df.loc[votes_df['user_id'] == user_id, 'choice'] = choice
@@ -47,7 +62,7 @@ def add_user(user_id):
         users_df.to_csv(USERS_FILE_PATH, index=False)
 
 # 显示统计图
-votes_df = load_votes()
+votes_df = load_votes_df()
 st.title("🗳️ 当前投票结果")
 if votes_df.empty:
     st.info("暂无投票")
@@ -99,30 +114,15 @@ if st.button("提交/修改投票", use_container_width=True):
     if user_id.strip() == "":
         st.warning("请输入一个有效的电子邮箱")
     else:
-        users_df = load_users()
-        if user_id in users_df['user_id'].values:
+        votes_df = load_votes_df()
+        
+        if user_id in votes_df['user_id'].values:
             submit_vote(user_id, choice)
             st.success("✅ 投票成功，你可以随时更改")
         else:
-            st.warning("请先提交Google Form进行注册")
-
-st.markdown("<hr style='border: 2px solid black;'>", unsafe_allow_html=True)
-
-st.subheader("👤 新用户注册")
-admin_password = st.text_input("请输入管理员密码", type="password", key="admin_pwd")
-ADMIN_PASSWORD = "password@abc123"  # 请替换为你的管理员密码
-
-if admin_password == ADMIN_PASSWORD:
-    new_user_id = st.text_input("请输入新用户电子邮箱进行注册", key="register")
-    if st.button("注册新用户", use_container_width=True):
-        if new_user_id.strip() == "":
-            st.warning("请输入一个有效的电子邮箱进行注册")
-        else:
-            users_df = load_users()
-            if new_user_id in users_df['user_id'].values:
-                st.info("该用户已注册")
+            users = load_users()
+            if user_id in users:
+                submit_vote(user_id, choice)
+                st.success("✅ 投票成功，你可以随时更改")
             else:
-                add_user(new_user_id)
-                st.success("注册成功！请返回上方进行投票")
-else:
-    st.info("请输入管理员密码以注册新用户")
+                st.warning("请先到（https://forms.gle/eZh1wPnjPnmDbLvS9）提交Google Form进行注册")
