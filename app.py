@@ -5,7 +5,7 @@ import pandas as pd
 import os
 import matplotlib.font_manager as fm
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+from google.oauth2.service_account import Credentials
 my_font = fm.FontProperties(fname="NotoSansTC-VariableFont_wght.ttf")
 
 VOTES_FILE_PATH = "votes.csv"
@@ -25,7 +25,7 @@ def load_users():
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
     # Authenticate
-    creds = ServiceAccountCredentials.from_json_keyfile_name("voting-464016-35d60f0bca00.json", scope)
+    creds = Credentials.from_service_account_info(st.secrets["gcp_service_account"])
     client = gspread.authorize(creds)
 
     spreadsheet = client.open("voting")
