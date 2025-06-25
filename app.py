@@ -47,14 +47,6 @@ def submit_vote(user_id, choice):
         votes_df = pd.concat([votes_df, new_row], ignore_index=True)
     votes_df.to_csv(VOTES_FILE_PATH, index=False)
 
-# 插入用户
-def add_user(user_id):
-    users_df = load_users()
-    if user_id not in users_df['user_id'].values:
-        new_row = pd.DataFrame([{'user_id': user_id}])
-        users_df = pd.concat([users_df, new_row], ignore_index=True)
-        users_df.to_csv(USERS_FILE_PATH, index=False)
-
 # 显示统计图
 votes_df = load_votes_df()
 st.title("🗳️ 当前投票结果")
