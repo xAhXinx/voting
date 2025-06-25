@@ -21,18 +21,27 @@ def load_votes_df():
 
 # 读取CSV为DataFrame
 def load_users():
-    # Define scope
-    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+    # Define correct scope for Sheets and Drive access
+    scope = [
+        "https://www.googleapis.com/auth/spreadsheets",
+        "https://www.googleapis.com/auth/drive"
+    ]
 
-    # Authenticate
-    creds = Credentials.from_service_account_info(st.secrets["gcp_service_account"])
+    # Load service account with scope
+    creds = Credentials.from_service_account_info(
+        st.secrets["gcp_service_account"],
+        scopes=scope
+    )
+
+    # Authorize gspread client
     client = gspread.authorize(creds)
 
+    # Load sheet
     spreadsheet = client.open("voting")
     sheet = spreadsheet.worksheet("Form Responses 1")
     data = sheet.get_all_records()
 
-    # Extract only the email addresses
+    # Extract emails
     users = [row['Email Address'] for row in data]
     return users
 

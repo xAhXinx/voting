@@ -1,5 +1,5 @@
-testing.ipynb
-voting-464016-35d60f0bca00.json
+voting-464016-4d1c3545b387.json
+.streamlit
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -182,3 +182,5 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+testing.ipynb
