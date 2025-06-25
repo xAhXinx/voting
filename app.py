@@ -120,4 +120,4 @@ if st.button("提交/修改投票", use_container_width=True):
                 submit_vote(user_id, choice)
                 st.success("✅ 投票成功，你可以随时更改")
             else:
-                st.warning("请先到（https://forms.gle/eZh1wPnjPnmDbLvS9）提交Google Form进行注册")
+                st.warning("请先到 https://forms.gle/eZh1wPnjPnmDbLvS9 提交Google Form进行注册")
