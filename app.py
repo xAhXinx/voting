@@ -9,17 +9,11 @@ from oauth2client.service_account import ServiceAccountCredentials
 my_font = fm.FontProperties(fname="NotoSansTC-VariableFont_wght.ttf")
 
 VOTES_FILE_PATH = "votes.csv"
-USERS_FILE_PATH = "users.csv"
 
 # 初始化文件
 if not os.path.exists(VOTES_FILE_PATH):
     with open(VOTES_FILE_PATH, "w") as f:
         f.write("user_id,choice\n")
-
-# 初始化文件
-if not os.path.exists(USERS_FILE_PATH):
-    with open(USERS_FILE_PATH, "w") as f:
-        f.write("user_id\n")
 
 # 读取CSV为DataFrame
 def load_votes_df():
