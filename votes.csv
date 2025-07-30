@@ -1,3 +1,4 @@
-user_id,choice
-testing1@gmail.com,反
-testing2@gmail.com,正
+user_id,choice_team,choice_speaker
+kienxin90@gmail.com,正方,正方一辩
+yeungkx-wm21@student.tarc.edu.my,反方,正方三辩
+ongwx-wm23@student.tarc.edu.my,反方,反方一辩
